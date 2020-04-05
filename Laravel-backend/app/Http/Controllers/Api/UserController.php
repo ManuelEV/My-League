@@ -17,6 +17,7 @@ class UserController extends Controller
 	public function login () {
 		if (auth()->attempt(request()->input())) {
 			$user = auth()->user();
+			Log::info($user);
 			$success['token'] =  $user
 				->createToken('Passport Api', ['show-products'])
 				->accessToken;
