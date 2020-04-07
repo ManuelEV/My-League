@@ -30,8 +30,9 @@ class AuthServiceProvider extends ServiceProvider
         Passport::routes();
 
 	    Passport::tokensCan([
-		    'show-products' => 'Ver productos',
-		    'show-invoices' => 'Ver facturas',
+            'admin' => 'Administrator scopes',
+            'manager' => 'Manager scopes',
+            'user' => 'User scopes'
 	    ]);
 
 	    Passport::tokensExpireIn(now()->addMinutes(10));

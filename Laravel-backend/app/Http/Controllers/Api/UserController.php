@@ -17,9 +17,22 @@ class UserController extends Controller
 	public function login () {
 		if (auth()->attempt(request()->input())) {
 			$user = auth()->user();
-			Log::info($user);
+			$scopes = [];
+            switch ($user->role_id) {
+                case 1:
+                    $scopes = ['admin', 'manager', 'user'];
+                    break;
+                case 2:
+                    $scopes = ['manager', 'user'];
+                    break;
+                case 3:
+                    $scopes = ['user'];
+                    break;
+                default:
+                    break;
+            }
 			$success['token'] =  $user
-				->createToken('Passport Api', ['show-products'])
+				->createToken('Passport Api', $scopes)
 				->accessToken;
 			return response()->json(['success' => $success], 200);
 		} else {
@@ -44,8 +57,11 @@ class UserController extends Controller
 
 		request()->merge(['password' => bcrypt(request('password'))]);
 		$user = User::create(request()->input());
+
+
+
 		$success['token'] =  $user
-			->createToken('Passport Api', ['show-products'])
+			->createToken('Passport Api', ['user'])
 			->accessToken;
 		return response()->json(['success' => $success]);
 	}
